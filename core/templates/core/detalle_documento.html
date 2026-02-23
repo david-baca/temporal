@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle del documento{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3>Documento: {{ documento.titulo|default:"Sin título" }}</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>UUID:</strong> <code>{{ documento.uuid }}</code></p>
+                <p><strong>Subido por:</strong> {{ documento.usuario.first_name|default:documento.usuario.username }}</p>
+                <p><strong>Fecha:</strong> {{ documento.fecha_subida|date:"d/m/Y H:i" }}</p>
+                <p><strong>Archivo:</strong> <a href="{{ documento.archivo.url }}" target="_blank" class="btn btn-sm btn-outline-primary">Ver PDF</a></p>
+
+                <h4>Firmantes</h4>
+                {% if firmas %}
+                    <ul>
+                    {% for firma in firmas %}
+                        <li>{{ firma.usuario.first_name|default:firma.usuario.username }} - {{ firma.fecha_firma|date:"d/m/Y H:i" }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Este documento aún no tiene firmas.</p>
+                {% endif %}
+
+                <h4>Código QR</h4>
+                <p>Escanea este código para ver la información pública del documento:</p>
+                <img src="{% url 'descargar_qr' documento.uuid %}" alt="QR" style="max-width: 200px;" class="img-thumbnail">
+                <br>
+                <a href="{% url 'descargar_qr' documento.uuid %}" download class="btn btn-sm btn-outline-success mt-2">Descargar QR como PNG</a>
+                <a href="{% url 'descargar_pdf_con_qr' documento.uuid %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-qr-code"></i> Descargar PDF con QR estampado
+                </a>
+                <hr>
+                <a href="{% url 'firmar_documento' %}" class="btn btn-primary">Firmar este documento</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

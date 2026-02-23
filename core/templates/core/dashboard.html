@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Gestor de Documentos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'DataTables/datatables.min.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Mis Documentos</h2>
+<div class="table-responsive">
+    <table id="documentosTable" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>UUID</th>
+                <th>Fecha subida</th>
+                <th>Subido por</th>
+                <th>Firmantes</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documentos %}
+            <tr>
+                <td>{{ doc.titulo|default:"Sin título" }}</td>
+                <td><code>{{ doc.uuid }}</code></td>
+                <td>{{ doc.fecha_subida|date:"d/m/Y H:i" }}</td>
+                <td>{{ doc.usuario.first_name|default:doc.usuario.username }}</td>
+                <td>
+                    {% for firma in doc.firmas.all %}
+                        {{ firma.usuario.first_name|default:firma.usuario.username }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        <span class="text-muted">Sin firmantes</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'detalle_documento' doc.uuid %}" class="btn btn-sm btn-outline-primary" title="Ver detalle">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <!-- DataTables manejará el mensaje de tabla vacía, esta fila no es necesaria pero la dejamos por si acaso -->
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'DataTables/datatables.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#documentosTable').DataTable({
+            language: {
+                "emptyTable": "No hay documentos para mostrar.",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ documentos",
+                "infoEmpty": "Mostrando 0 a 0 de 0 documentos",
+                "infoFiltered": "(filtrado de _MAX_ documentos totales)",
+                "lengthMenu": "Mostrar _MENU_ documentos",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron documentos",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+            order: [[2, 'desc']]  // Ordenar por la tercera columna (Fecha subida) descendente
+        });
+    });
+</script>
+{% endblock %}

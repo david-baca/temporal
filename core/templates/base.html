@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestor de Documentos{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.7-dist/css/bootstrap.css' %}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="{% static 'bootstrap-icons-1.13.1/bootstrap-icons.css' %}">
+    <!-- DataTables CSS (opcional, solo si se usa) -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Gestor de Documentos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link text-white">Hola, {{ user.first_name|default:user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'subir_documento' %}">Subir</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'firmar_documento' %}">Firmar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_logout' %}">Cerrar sesión</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_login' %}">Iniciar sesión</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- DataTables JS -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

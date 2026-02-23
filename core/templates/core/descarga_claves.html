@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Descargar claves{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h3>¡Registro exitoso!</h3>
+            </div>
+            <div class="card-body">
+                <p>Descarga tus archivos de identidad digital. La clave privada <strong>no se almacena</strong> en el servidor; guárdala en un lugar seguro.</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'descarga_privada' %}" class="btn btn-primary">Descargar clave privada (.key)</a>
+                    <a href="{% url 'descarga_publica' %}" class="btn btn-secondary">Descargar certificado público (.cer)</a>
+                </div>
+                <hr>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-success">Ir al Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

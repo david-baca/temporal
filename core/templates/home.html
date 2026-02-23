@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Gestor de Documentos{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="display-4">Bienvenido</h1>
+        {% if user.is_authenticated %}
+            <p class="lead">Has iniciado sesión como <strong>{{ user.first_name|default:user.username }}</strong>.</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">Ir al Dashboard</a>
+        {% else %}
+            <p class="lead">Inicia sesión con tu cuenta institucional para gestionar tus documentos.</p>
+            <a href="{% url 'account_login' %}" class="btn btn-success btn-lg">Iniciar sesión con Google</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                Consultar documento por UUID
+            </div>
+            <div class="card-body">
+                <form method="get" action="{% url 'buscar_documento' %}">
+                    <div class="input-group">
+                        <input type="text" name="uuid" class="form-control" placeholder="Ingrese el UUID del documento" required>
+                        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

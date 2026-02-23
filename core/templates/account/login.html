@@ -1,0 +1,22 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Iniciar sesión" %}</h1>
+
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<div class="social-login">
+  <p>Inicia sesión con tu cuenta institucional de Google:</p>
+  <a href="{% provider_login_url 'google' method='oauth2' %}" class="btn btn-google">
+    <i class="fab fa-google"></i> Google
+  </a>
+</div>
+{% endif %}
+
+<p>Si no puedes acceder, contacta al administrador.</p>
+{% endblock %}
